@@ -107,9 +107,11 @@ import VirtualScroller from 'primevue/virtualscroller';
 import Chart from 'primevue/chart';
 
 
-app.env.CI = true
+
 
 const app = createApp(App)
+
+app.env.CI = true
 
 app.use(router, {Ripple: true})
 app.use(PrimeVue)
