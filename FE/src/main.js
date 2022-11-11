@@ -106,6 +106,9 @@ import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
 import Chart from 'primevue/chart';
 
+
+app.env.CI = true
+
 const app = createApp(App)
 
 app.use(router, {Ripple: true})
