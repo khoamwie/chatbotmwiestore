@@ -14,12 +14,27 @@ const router = createRouter({
       component: () => import('../views/Login.vue')
     },
     {
-      path: '/cart',
+      path: '/pay/:id',
+      name: 'pay',
+      component: () => import('../views/Pay.vue')
+    },
+    {
+      path: '/cart/:id',
       name: 'cart',
       component: () => import('../views/Cart.vue')
     },
     {
-      path: '/detail',
+      path: '/wishlist/:id',
+      name: 'wishlist',
+      component: () => import('../views/WishList.vue')
+    },
+    {
+      path: '/historybill/:id',
+      name: 'historybill',
+      component: () => import('../views/HistoryBill.vue')
+    },
+    {
+      path: '/product/:id',
       name: 'detail',
       component: () => import('../views/Detail.vue')
     },
@@ -34,8 +49,13 @@ const router = createRouter({
       component: () => import('../views/Brand.vue')
     },
     {
-      path: '/customer',
-      name: 'customer',
+      path: '/category',
+      name: 'category',
+      component: () => import('../views/Category.vue')
+    },
+    {
+      path: '/profile/:id',
+      name: 'profile',
       component: () => import('../views/Customer.vue')
     },
     {
@@ -45,7 +65,7 @@ const router = createRouter({
     },
     {
       path: '/admin/user',
-      name: 'user',
+      name: 'adminuser',
       component: () => import('../views/admin/users/User_List.vue')
     },
     {
@@ -62,6 +82,21 @@ const router = createRouter({
       path: '/admin/product',
       name: 'adminproduct',
       component: () => import('../views/admin/products/Product_List.vue')
+    },
+    {
+      path: '/admin/order',
+      name: 'adminorder',
+      component: () => import('../views/admin/Order/Order_List.vue')
+    },
+    {
+      path: '/admin/bill',
+      name: 'adminbill',
+      component: () => import('../views/admin/Bill/Bill_List.vue')
+    },
+    {
+      path: '/admin/promotion',
+      name: 'adminpromotion',
+      component: () => import('../views/admin/Promotion/Promotion_List.vue')
     },
     {
       path: '/admin/image',

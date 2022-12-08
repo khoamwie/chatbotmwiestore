@@ -26,7 +26,7 @@ namespace MwiesStore.Controllers
         [Route("{id}")]
         public async Task<ActionResult<Images>> GetbyID(int id)
         {
-            var acc = await _context.Images.Where(d => d.Id == id).SingleOrDefaultAsync();
+            var acc = await _context.Images.Where(d => d.Product_id == id).ToListAsync();
             if (acc == null)
                 return NotFound();
             return Ok(acc);

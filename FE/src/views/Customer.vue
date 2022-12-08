@@ -62,7 +62,7 @@
                     </div>
                     <div class="modal-body">
                         <label class="form-label mt-2">Họ và Tên</label>
-                        <input class="form-control" type="text" name="" id="">
+                        <input class="form-control" type="text" name="" id="" v-model="user.name">
                         <label class="form-label mt-2">Giới tính</label>
                         <select class="form-select" aria-label="Default select example">
                             <option selected>Nam</option>
@@ -72,7 +72,7 @@
                         <label class="form-label mt-2">Ngày sinh</label>
                         <input class="form-control" type="datetime" name="" id="">                        
                         <label class="form-label mt-2">Số điện thoại</label>
-                        <input class="form-control" type="number" name="" id="">
+                        <input class="form-control" type="text" name="" id="" placeholder="{{user.phone}}">
                         <label class="form-label mt-2">Tên tài khoản</label>
                         <input class="form-control" type="text" name="" id="">
                         <label class="form-label mt-2">Mật khẩu</label>
@@ -96,7 +96,27 @@
 <script>
 import Header from '../components/Layouts/Header.vue';
 import Footer from '../components/Layouts/Footer.vue';
+import { HTTP } from '../http-common';
 export default {
+    data(){
+        return {
+            user: {},
+            userid: null
+        }
+    },
+    mounted(){
+        this.userid = localStorage.getItem('userid')
+        this.getUser()
+    },
+    methods: {
+        getUser(){
+            HTTP.get('User/' + this.userid).then(res => {
+                if(res.data){
+                    this.user = res.data
+                }
+            })
+        }
+    },
     components: { Header, Footer }
 }
 </script>

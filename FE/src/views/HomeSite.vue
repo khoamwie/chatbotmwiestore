@@ -42,7 +42,7 @@
           <div class="product-item">
             <div class="product-item-content">
               <div class="mb-3">
-                <img :src="'src/assets/images/' + slotProps.data.images + '.PNG'" class="product-image" />
+                <img :src="'/src/assets/images/' + slotProps.data.images + '.PNG'" class="product-image" />
               </div>
               <div>
                 <h4 class="mb-1">{{ slotProps.data.name }}</h4>
@@ -73,7 +73,7 @@
           <div class="product-item">
             <div class="product-item-content">
               <div class="mb-3">
-                <img :src="'src/assets/images/' + slotProps.data.images + '.PNG'" class="product-image" />
+                <img :src="'/src/assets/images/' + slotProps.data.images + '.PNG'" class="product-image" />
               </div>
               <div>
                 <h4 class="mb-1">{{ slotProps.data.name }}</h4>
@@ -99,15 +99,14 @@ import router from '../router/index.js'
 import Header from '../components/Layouts/Header.vue'
 import Footer from '../components/Layouts/Footer.vue'
 import Slider from '../components/Layouts/Slider.vue'
-import Chat from '../components/Buttons/Chat.vue'
 
 export default {
   data() {
     return {
       brands: null,
       products: [
-        {name: 'Sữa Tăng Cơ Giảm Mỡ Applied Nutrition ISO-XP 1.8kg - 72 Lần Dùng', images: 'product_1', price: '1,785,000 '},
-        {name: 'Viên Uống Đốt Mỡ Không Chất Kích Thích Nutrex Lipo-6 Black Stim-Free 60 Viên', images: 'product_2', price: '800,000 '},
+        {name: 'Sữa Tăng Cơ Applied Nutrition ISO-XP 1.8kg - 72 Lần Dùng', images: 'product_2', price: '1,785,000 '},
+        {name: 'Viên Uống Đốt Mỡ Nutrex Lipo-6 Black Stim-Free 60 Viên', images: 'product_1', price: '800,000 '},
         {name: 'Sữa Tăng Cơ Giảm Mỡ Rule One Protein R1 Protein 2.27kg', images: 'product_3', price: '1,800,000 '},
         {name: 'BPI ISO HD 4.8lbs (2.17kg) - 100% Pure Whey Protein Isolate, 3 Mùi', images: 'product_4', price: '1,598,000 '},
         {name: 'Viên Uống Đốt Mỡ Giảm Cân PLATINUM PURE CLA 90 Viên', images: 'product_5', price: '550,000 '},
@@ -130,10 +129,10 @@ export default {
       router.push('/brand/all')
     },
     categoryAll(){
-      router.push('/category/all')
+      router.push('/category')
     }
   },
-  components: { Header, Footer, Slider, Chat }
+  components: { Header, Footer, Slider}
 }
 </script>
 

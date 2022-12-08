@@ -111,7 +111,7 @@ import Chart from 'primevue/chart';
 
 const app = createApp(App)
 
-app.env.CI = true
+
 
 app.use(router, {Ripple: true})
 app.use(PrimeVue)

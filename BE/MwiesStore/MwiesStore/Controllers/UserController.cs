@@ -15,6 +15,22 @@ namespace MwiesStore.Controllers
             _context = context;
         }
 
+        [HttpPost]
+        [Route("Login")]
+        public async Task<ActionResult<Users>> Login([FromBody] Login l)
+        {
+            var acc = await _context.Users.Where(d => d.Username == l.username && d.Password == l.password).SingleOrDefaultAsync();
+
+            if (acc != null)
+            {
+                return Ok(acc);
+            }
+            return BadRequest("Tai khoan hoac mat khong dung");
+
+        }
+
+        
+
         [HttpGet]
         [Route("getAll")]
         public async Task<ActionResult<Users>> getAll()
@@ -44,14 +60,20 @@ namespace MwiesStore.Controllers
                     Gender = user.Gender,
                     Birthdate = user.Birthdate,
                     Phone = user.Phone,                
-                    Lock = user.Lock,
+                    Lock = 0,
+                    Role = 0,
+                    Username = user.Username,
+                    Password = user.Password,
                 };
 
-                var acc = await _context.Users.SingleOrDefaultAsync(i => i.Name == u.Name);
+                
+
+                var acc = await _context.Users.SingleOrDefaultAsync(i => i.Username == u.Username);
                 if (acc == null)
                 {
-                    _context.Add(u);
+                    _context.Add(u);                    
                     _context.SaveChanges();
+                    await addEmptyBill(u.Id);
                     return Ok();
                 }
 
@@ -83,6 +105,21 @@ namespace MwiesStore.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+        //khoa tai khoan nguoi dung
+        [HttpPut]
+        [Route("lockUser/{id}")]
+        public async Task<ActionResult> lockUser(int id)
+        {
+
+            var acc = await _context.Users.FindAsync(id);
+            if (acc == null)
+            {
+                return NotFound();
+            }
+            acc.Lock = 1;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
 
         [HttpDelete]
         [Route("deleteUser/{id}")]
@@ -97,5 +134,39 @@ namespace MwiesStore.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        private async Task<IActionResult> addEmptyBill(int user_id)
+        {
+            try
+            {
+                var u = new Bills
+                {
+                    User_id = user_id,
+                    Status = 0,
+                    Date = DateTime.Now,
+                    Address = ""
+                };
+
+                var acc = await _context.Bills.SingleOrDefaultAsync(i => i.Id == u.Id);
+                if (acc == null)
+                {
+                    _context.Add(u);
+                    _context.SaveChanges();
+                    return Ok();
+                }
+
+                return BadRequest("Them khong thanh cong");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
+    public class Login
+    {
+        public string username { get; set; }
+        public string password { get; set; }
+    }
+
 }

@@ -5,10 +5,10 @@
             <Sidebar></Sidebar>
         </div>
         <div class="col-right">
-            <DataTable :value="customers" :paginator="true" class="p-datatable-customers" :rows="10" dataKey="id"
+            <DataTable :value="products" :paginator="true" class="p-datatable-customers" :rows="5" dataKey="id"
                 :rowHover="true" v-model:selection="selectedCustomers" v-model:filters="filters" filterDisplay="menu"
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                :rowsPerPageOptions="[10, 25, 50]"
+                :rowsPerPageOptions="[5, 10, 15]"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 responsiveLayout="scroll">
                 <template #header>
@@ -29,46 +29,48 @@
                 <template #empty>
                     Không tìm thấy sản phẩm.
                 </template>
-                <Column field="id" header="ID" sortable>
-                    <template #body="{ data }">
-                        {{ data.name }}
-                    </template>
-                </Column>
                 <Column field="name" header="Tên sản phẩm" sortable>
                     <template #body="{ data }">
                         {{ data.name }}
                     </template>
                 </Column>
-                <Column field="name" header="Giá" sortable>
+                <Column field="type" header="Dạng" sortable>
+                    <template #body="{ data }">
+                        {{ data.type }}
+                    </template>
+                </Column>
+                <Column field="price" header="Giá" sortable>
+                    <template #body="{ data }">
+                        {{ data.price }}
+                    </template>
+                </Column>
+                <!-- <Column field="price" header="NSX" sortable>
                     <template #body="{ data }">
                         {{ data.name }}
                     </template>
-                </Column>
-                <Column field="name" header="NSX" sortable>
+                </Column> -->
+                <Column field="endDate" header="HSD" sortable>
                     <template #body="{ data }">
-                        {{ data.name }}
+                        {{ formatDate(data.endDate) }}
                     </template>
                 </Column>
-                <Column field="name" header="HSD" sortable>
+                <!-- <Column field="category_id" header="Danh mục" sortable>
                     <template #body="{ data }">
-                        {{ data.name }}
+                        {{ data.category_id }}
                     </template>
                 </Column>
-                <Column field="name" header="Danh mục" sortable>
+                <Column field="brand_id" header="Nhà cung cấp" sortable>
                     <template #body="{ data }">
-                        {{ data.name }}
+                        {{ data.brand_id }}
                     </template>
-                </Column>
-                <Column field="name" header="Nhà cung cấp" sortable>
-                    <template #body="{ data }">
-                        {{ data.name }}
-                    </template>
-                </Column>
+                </Column> -->
                 <Column field="" header="" style="min-width: 14rem;">
-                    <Button class="p-button-rounded p-button-success" icon="pi pi-comments" />
-                    <Button class="p-button-rounded p-button-success" icon="pi pi-comment" />
-                    <Button class="p-button-rounded p-button-warning" icon="pi pi-pencil" />
-                    <Button class="p-button-rounded p-button-danger" icon="pi pi-trash" />
+                    <template #body="{ data }">
+                        <!-- <Button class="p-button-rounded p-button-success" icon="pi pi-comments" />&nbsp;
+                        <Button class="p-button-rounded p-button-success" icon="pi pi-comment" />&nbsp; -->
+                        <Button class="p-button-rounded p-button-warning" icon="pi pi-pencil" />&nbsp;
+                        <Button class="p-button-rounded p-button-danger" icon="pi pi-trash" />&nbsp;
+                    </template>
                 </Column>
             </DataTable>
         </div>
@@ -76,18 +78,39 @@
 </template>
 
 <script>
-import {HTTP} from '../../../http-common.js'
+import { HTTP } from '../../../http-common.js'
 import { FilterMatchMode } from 'primevue/api'
 import Header from '../../../components/admin/Header.vue'
 import Sidebar from '../../../components/admin/Sidebar.vue'
 export default {
     data() {
         return {
-            data: null,
+            products: null,
             filters: {
                 'global': { value: null, matchMode: FilterMatchMode.CONTAINS }
             }
         }
+    },
+    mounted() {
+        this.getAllProduct()
+    },
+    methods: {
+        getAllProduct() {
+            HTTP.get('Product/getAll').then(res => {
+                if (res.data) {
+                    this.products = res.data
+                }
+            })
+        },
+        formatDate(value) {
+            var date = new Date(value)
+            date.formatDate
+            return date.toLocaleDateString('en-US', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+            });
+        },
     },
     components: { Header, Sidebar }
 }

@@ -7,29 +7,32 @@
             <div class="mt-4 mb-4" style="display: flex; justify-content: space-between; flex-direction: column;">
                 <div>
                     <div class="mt-4 mb-4 fw-bold">
-                        <a href="/admin"><i class="bi bi-house"></i> Trang chủ</a>
+                        <a href="/admin" :hidden="userRole == 1 ? false : true "><i class="bi bi-house"></i> Trang chủ</a>
                     </div>
                     <div class="mt-4 mb-4 fw-bold">
-                        <a href="/admin/user"><i class="bi bi-person"></i> Quản lý người dùng</a>
+                        <a href="/admin/user" :hidden="userRole == 2 ? false : true "><i class="bi bi-person"></i> Quản lý người dùng</a>
                     </div>
                     <div class="mt-4 mb-4 fw-bold">
-                        <a href="/admin/brand"><i class="bi bi-bookmarks"></i> Quản lý nhà cung cấp</a>
+                        <a href="/admin/brand" :hidden="userRole == 1 ? false : true "><i class="bi bi-bookmarks"></i> Quản lý nhà cung cấp</a>
                     </div>
                     <div class="mt-4 mb-4 fw-bold">
-                        <a href="/admin/category"><i class="bi bi-tags"></i> Quản lý danh mục</a>
+                        <a href="/admin/category" :hidden="userRole == 1 ? false : true "><i class="bi bi-tags"></i> Quản lý danh mục</a>
                     </div>
                     <div class="mt-4 mb-4 fw-bold">
-                        <a href="/admin/product"><i class="bi bi-box-seam"></i> Quản lý sản phẩm</a>
+                        <a href="/admin/product" :hidden="userRole == 1 ? false : true "><i class="bi bi-box-seam"></i> Quản lý sản phẩm</a>
                     </div>
                     <!-- <div class="mt-4 mb-4 fw-bold">
                         <a href="/admin/image"><i class="bi bi-images"></i> Quản lý hình ảnh</a>
                     </div> -->
                     <div class="mt-4 mb-4 fw-bold">
-                        <a href="/admin/order"><i class="bi bi-cart"></i> Quản lý đơn đặt hàng</a>
+                        <a href="/admin/order" :hidden="userRole == 1 ? false : true "><i class="bi bi-cart"></i> Quản lý đơn đặt hàng</a>
                     </div>
                     <div class="mt-4 mb-4 fw-bold">
-                        <a href="/admin/bill"><i class="bi bi-bag-dash"></i> Quản lý hóa đơn</a>
+                        <a href="/admin/promotion" :hidden="userRole == 1 ? false : true "><i class="bi bi-balloon"></i> Quản lý khuyến mãi</a>
                     </div>
+                    <!-- <div class="mt-4 mb-4 fw-bold">
+                        <a href="/admin/bill"><i class="bi bi-bag-dash"></i> Quản lý hóa đơn</a>
+                    </div> -->
                     <!-- <div class="mt-4 mb-4 fw-bold">
                         <a href="/admin/bill"><i class="bi bi-chat"></i> Quản lý bình luận</a>
                     </div>
@@ -51,7 +54,14 @@ export default {
     data() {
         return {
             visibleLeft: false,
+            userRole: null
         }
+    },
+    mounted(){
+        this.userRole = localStorage.getItem('role')
+    },
+    methods: {
+    
     }
 }
 </script>

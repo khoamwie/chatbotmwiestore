@@ -2,67 +2,111 @@
 	<Header></Header>
 	<div class="container mt-4 mb-4">
 		<div class="">
-			<DataView :value="category" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder"
+			<div class="mb-4 fst-italic">
+				Trang chủ / sản phẩm
+			</div>
+			<DataView :value="product" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder"
 				:sortField="sortField">
 				<template #header>
 					<div class="grid grid-nogutter">
 						<div class="col-6 fw-bold fs-4" style="text-align: left; color: #fbae40;">
-							Danh sách sản phẩm
-						</div>
-						<div class="col-6" style="text-align: right">
-							<DataViewLayoutOptions v-model="layout" />
+							Danh sách tất cả sản phẩm
 						</div>
 					</div>
 				</template>
-
-				<template #list="slotProps">
-					<div class="col-12">
-						<div class="product-list-item">
-							<img :src="'/src/assets/images/' + slotProps.data.images + '.png'"
-								:alt="slotProps.data.name" />
-							<div class="product-list-detail">
-								<div class="product-name">{{ slotProps.data.name }}</div>
-								<!-- <div class="product-description">{{ slotProps.data.description }}</div> -->
-								<!-- <Rating :modelValue="slotProps.data.rating" :readonly="true" :cancel="false"></Rating> -->
-								<!-- <i class="pi pi-tag product-category-icon"></i><span class="product-category">{{
-										slotProps.data.category
-								}}</span> -->
-							</div>
-							<div class="product-list-action">
-								<!-- <span class="product-price">${{ slotProps.data.price }}</span> -->
-								<Button class="p-button-rounded p-button-warning" icon="pi pi-angle-right" 
-									:disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
-								<!-- <span :class="'product-badge status-' + slotProps.data.inventoryStatus.toLowerCase()">{{
-										slotProps.data.inventoryStatus
-								}}</span> -->
-							</div>
-						</div>
-					</div>
-				</template>
-
 				<template #grid="slotProps">
 					<div class="col-12 md:col-4">
 						<div class="product-grid-item card">
 							<div class="product-grid-item-top">
-								<!-- <div>
-									<i class="pi pi-tag product-category-icon"></i>
-									<span class="product-category">{{ slotProps.data.category }}</span>
-								</div> -->
-								<!-- <span :class="'product-badge status-' + slotProps.data.inventoryStatus.toLowerCase()">{{
-										slotProps.data.inventoryStatus
-								}}</span> -->
 							</div>
 							<div class="product-grid-item-content">
-								<img :src="'/src/assets/images/' + slotProps.data.images + '.png'"
+								<img :src="'/src/assets/images/' + slotProps.data.image + '.png'"
 									:alt="slotProps.data.name" />
 								<div class="product-name">{{ slotProps.data.name }}</div>
-								<div class="product-description">{{ slotProps.data.description }}</div>
-								<!-- <Rating :modelValue="slotProps.data.rating" :readonly="true" :cancel="false"></Rating> -->
+								<div class="product-description"></div>
 							</div>
 							<div class="product-grid-item-bottom">
-								<!-- <span class="product-price">${{ slotProps.data.price }}</span> -->
-								<Button class="p-button-rounded p-button-warning" icon="pi pi-angle-right"
-									:disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
+								<div class="car-buttons">
+									<router-link :to="'/product/' + slotProps.data.id" style="text-decoration: none;">
+										<Button icon="pi pi-search" class="p-button-success p-button-rounded mr-2" />
+									</router-link>
+									<Button icon="pi pi-thumbs-up" class="p-button-help p-button-rounded mr-2"
+										@click="addProductWish"></Button>
+									<!-- <Button icon="pi pi-shopping-cart" class="p-button-help p-button-rounded"
+										@click="addProductWish"></Button> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</template>
+			</DataView>
+
+			<DataView :value="product2" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder"
+				:sortField="sortField">
+				<template #header>
+					<div class="grid grid-nogutter">
+						<div class="col-6 fw-bold fs-4" style="text-align: left; color: #fbae40;">
+							Danh sách sản phẩm tăng cân - tăng cơ
+						</div>
+					</div>
+				</template>
+				<template #grid="slotProps">
+					<div class="col-12 md:col-4">
+						<div class="product-grid-item card">
+							<div class="product-grid-item-top">
+							</div>
+							<div class="product-grid-item-content">
+								<img :src="'/src/assets/images/' + slotProps.data.image + '.png'"
+									:alt="slotProps.data.name" />
+								<div class="product-name">{{ slotProps.data.name }}</div>
+								<div class="product-description"></div>
+							</div>
+							<div class="product-grid-item-bottom">
+								<div class="car-buttons">
+									<router-link :to="'/product/' + slotProps.data.id" style="text-decoration: none;">
+										<Button icon="pi pi-search" class="p-button-success p-button-rounded mr-2" />
+									</router-link>
+									<Button icon="pi pi-thumbs-up" class="p-button-help p-button-rounded mr-2"
+										@click="addProductWish"></Button>
+									<!-- <Button icon="pi pi-shopping-cart" class="p-button-help p-button-rounded"
+										@click="addProductWish"></Button> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</template>
+			</DataView>
+			<!--  -->
+			<DataView :value="product3" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder"
+				:sortField="sortField">
+				<template #header>
+					<div class="grid grid-nogutter">
+						<div class="col-6 fw-bold fs-4" style="text-align: left; color: #fbae40;">
+							Danh sách sản phẩm giảm cân - giảm mỡ
+						</div>
+					</div>
+				</template>
+				<template #grid="slotProps">
+					<div class="col-12 md:col-4">
+						<div class="product-grid-item card">
+							<div class="product-grid-item-top">
+							</div>
+							<div class="product-grid-item-content">
+								<img :src="'/src/assets/images/' + slotProps.data.image + '.png'"
+									:alt="slotProps.data.name" />
+								<div class="product-name">{{ slotProps.data.name }}</div>
+								<div class="product-description"></div>
+							</div>
+							<div class="product-grid-item-bottom">
+								<div class="car-buttons">
+									<router-link :to="'/product/' + slotProps.data.id" style="text-decoration: none;">
+										<Button icon="pi pi-search" class="p-button-success p-button-rounded mr-2" />
+									</router-link>
+									<Button icon="pi pi-thumbs-up" class="p-button-help p-button-rounded mr-2"
+										@click="addProductWish"></Button>
+									<!-- <Button icon="pi pi-shopping-cart" class="p-button-help p-button-rounded"
+										@click="addProductWish"></Button> -->
+								</div>
 							</div>
 						</div>
 					</div>
@@ -77,11 +121,14 @@
 import Header from '../components/Layouts/Header.vue'
 import Footer from '../components/Layouts/Footer.vue'
 import { HTTP } from '../http-common.js'
+import { RouterLink } from 'vue-router'
 
 export default {
 	data() {
 		return {
-			category: null,
+			product: null,
+			product2: null,
+			product3: null,
 			layout: 'grid',
 			sortKey: null,
 			sortOrder: null,
@@ -93,16 +140,32 @@ export default {
 		}
 	},
 	mounted() {
-		this.getAllBrand()
+		this.getAllProduct()
+		this.getProductbyCatId()
 	},
 	methods: {
-		getAllBrand() {
-			HTTP.get('Brand/getAll').then(res => {
+		getAllProduct() {
+			HTTP.get('Product/getAll').then(res => {
 				if (res.data) {
-					this.brands = res.data
+					this.product = res.data
 				}
 			})
-		}
+		},
+		getProductbyCatId(){
+			HTTP.get('Product/GetbyCategoryID/2').then(res => {
+				if(res.data){
+					this.product2 = res.data
+				}
+			})
+			HTTP.get('Product/GetbyCategoryID/3').then(res => {
+				if(res.data){
+					this.product3 = res.data
+				}
+			})
+		},
+		addProductWish() {
+
+		},
 	},
 	components: { Header, Footer }
 }

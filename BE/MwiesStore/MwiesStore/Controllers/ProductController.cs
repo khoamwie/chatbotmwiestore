@@ -21,7 +21,6 @@ namespace MwiesStore.Controllers
         {
             return Ok(await _context.Products.ToListAsync());
         }
-       
         
         [HttpGet]
         [Route("{id}")]
@@ -34,7 +33,7 @@ namespace MwiesStore.Controllers
         }
         
         [HttpGet]
-        [Route("GetbyCategoryID")]
+        [Route("GetbyCategoryID/{id}")]
         public async Task<ActionResult<IEnumerable<Products>>> GetbyCategoryID(int id)
         {
             var product = await _context.Products.Where(d => d.Category_id == id).ToListAsync();
@@ -51,6 +50,6 @@ namespace MwiesStore.Controllers
             if (product == null)
                 return NotFound();
             return Ok(product);
-        } 
+        }
     }
 }

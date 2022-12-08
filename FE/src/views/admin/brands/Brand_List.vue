@@ -5,7 +5,7 @@
             <Sidebar></Sidebar>
         </div>
         <div class="col-right">
-            <DataTable :value="data" :paginator="true" class="p-datatable-customers" :rows="5" dataKey="id"
+            <DataTable :value="brand" :paginator="true" class="p-datatable-customers" :rows="5" dataKey="id"
                 :rowHover="true" v-model:filters="filters"
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                 :rowsPerPageOptions="[5, 10, 15]"
@@ -15,7 +15,7 @@
                     <div class="fw-bold fs-5 mt-2 mb-2 "><i class="bi bi-tags"></i> Quản lý nhà cung cấp</div>
                     <div class="header-table">
                         <div>
-                            <Button class="p-button-rounded p-button-success" icon="pi pi-plus" />
+                            <Button class="p-button-rounded p-button-success" icon="pi pi-plus" @click="openAdd" />
                         </div>
                         <div>
                             <span class="p-input-icon-left">
@@ -47,6 +47,28 @@
                     </template>
                 </Column>
             </DataTable>
+
+            <Dialog v-model:visible="brandDialog" :style="{ width: '450px' }" header="Chi tiết nhà cung cấp"
+                :modal="true" class="p-fluid">
+                <div class="field">
+                    <label for="name">Tên nhà cung cấp: </label>
+                    <InputText id="name" v-model="brand.name" required="true" autofocus
+                        :class="{ 'p-invalid': submitted && !brand.name }" />
+                    <small class="p-error" v-if="submitted && !brand.name">Vui lòng điền tên nhà cung cấp!</small>
+                </div>
+
+                <div class="field">
+                    <label for="name">Quốc gia: </label>
+                    <InputText id="name" v-model="brand.country" required="true" autofocus
+                        :class="{ 'p-invalid': submitted && !brand.country }" />
+                    <small class="p-error" v-if="submitted && !brand.country">Vui lòng điền quốc gia!</small>
+                </div>
+
+                <template #footer>
+                    <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
+                    <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveBrand" />
+                </template>
+            </Dialog>
         </div>
     </div>
 </template>
@@ -59,7 +81,8 @@ import Sidebar from '../../../components/admin/Sidebar.vue'
 export default {
     data() {
         return {
-            data: null,
+            brand: null,
+            brandDialog: false,
             filters: {
                 'global': { value: null, matchMode: FilterMatchMode.CONTAINS }
             }
@@ -72,10 +95,32 @@ export default {
         getAll() {
             HTTP.get('Brand/getAll').then(res => {
                 if (res.data) {
-                    this.data = res.data;
+                    this.brand = res.data;
                 }
             })
-        }
+        },
+        openAdd() {
+            this.brand = {}
+            this.submitted = false
+            this.brandDialog = true
+        },
+        hideDialog() {
+            this.brandDialog = false;
+            this.submitted = false;
+        },
+        saveBrand() {
+            this.submitted = true;
+            HTTP.post('Brand/addBrand', {
+                name: this.brand.name,
+                country: this.brand.country
+            }).then(res => {
+                if (res.status == 200) {
+                    // this.brand = res.data
+                    alert('Them san pham vao gio hang thanh cong')
+                    location.reload()
+                }
+            })
+        },
     },
     components: { Header, Sidebar }
 }

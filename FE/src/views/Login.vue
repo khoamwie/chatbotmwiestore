@@ -6,7 +6,8 @@
         </div>
         <div class="row">
             <div class="col register">
-                <div class="fs-5 fw-bold mb-4 mt-4" style="text-align: center;">Nếu bạn chưa có tài khoản, hãy ấn nút bên dưới</div>
+                <div class="fs-5 fw-bold mb-4 mt-4" style="text-align: center;">Nếu bạn chưa có tài khoản, hãy ấn nút
+                    bên dưới</div>
                 <div class="regis">
                     <div class="regis-box">
                         <button class="btn btn-outline-dark" data-bs-toggle="modal"
@@ -18,11 +19,11 @@
                 <div class="fs-5 fw-bold mb-4 mt-4" style="text-align: center;">Đăng nhập</div>
                 <div class="login">
                     <div class="login-box">
-                        <label class="from-label mb-2">Tên người dùng</label>
-                        <input class="form-control mb-4" type="text">
+                        <label class="from-label mb-2">Tên tài khoản</label>
+                        <input class="form-control mb-4" type="text" v-model="username">
                         <label class="from-label mb-2">Mật khẩu</label>
-                        <input class="form-control mb-4" type="password">
-                        <button class="btn btn-outline-warning" style="float: right;">Đăng nhập</button>
+                        <input class="form-control mb-4" type="password" v-model="password">
+                        <button class="btn btn-outline-warning" style="float: right;" @click="login">Đăng nhập</button>
                     </div>
                 </div>
             </div>
@@ -46,27 +47,27 @@
                     </div>
                     <div class="modal-body">
                         <label class="form-label mt-2">Họ và Tên</label>
-                        <input class="form-control" type="text" name="" id="">
+                        <input class="form-control" type="text" name="" id="" v-model="name">
                         <label class="form-label mt-2">Giới tính</label>
-                        <select class="form-select" aria-label="Default select example">
+                        <select class="form-select" v-model="gender">
                             <option selected>Nam</option>
                             <option value="1">Nữ</option>
-                            <option value="2">Khác</option>
+                            <!-- <option value="2">Khác</option> -->
                         </select>
                         <label class="form-label mt-2">Ngày sinh</label>
-                        <input class="form-control" type="datetime" name="" id="">                        
+                        <input class="form-control" type="date" name="" id="" v-model="birthdate">
                         <label class="form-label mt-2">Số điện thoại</label>
-                        <input class="form-control" type="number" name="" id="">
+                        <input class="form-control" type="text" name="" id="" v-model="phone" maxlength="10">
                         <label class="form-label mt-2">Tên tài khoản</label>
-                        <input class="form-control" type="text" name="" id="">
+                        <input class="form-control" type="text" name="" id="" v-model="username" maxlength="20">
                         <label class="form-label mt-2">Mật khẩu</label>
-                        <input class="form-control" type="password" name="" id="">  
+                        <input class="form-control" type="password" name="" id="" v-model="password" maxlength="20">
                         <label class="form-label mt-2">Nhập lại mật khẩu</label>
-                        <input class="form-control" type="password" name="" id="">                       
+                        <input class="form-control" type="password" name="" id="" v-model="repassword" maxlength="20">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-outline-warning">Xác nhận</button>
+                        <button type="button" class="btn btn-outline-warning" @click="signin">Xác nhận</button>
                     </div>
                 </div>
             </div>
@@ -80,7 +81,62 @@
 <script>
 import Header from '../components/Layouts/Header.vue';
 import Footer from '../components/Layouts/Footer.vue';
+import router from '../router/index.js'
+import { HTTP } from '../http-common.js'
 export default {
+    data() {
+        return {
+            userlogin: null,
+            username: null,
+            password: null,
+            usersignin: null
+
+        }
+    },
+    mounted() {
+
+    },
+    methods: {
+        login() {
+            HTTP.post('User/Login', {
+                username: this.username,
+                password: this.password
+            }).then(res => {
+                if (res.data) {
+                    this.userlogin = res.data
+                    localStorage.setItem("userid", this.userlogin.id)
+                    localStorage.setItem("name", this.userlogin.name)
+                    localStorage.setItem("role", this.userlogin.role)
+                    router.push('/')
+                }
+            })
+        },
+        signin() {
+            if (this.repassword == this.password) {
+                HTTP.post('User/addUser', {
+                    name: this.name,
+                    gender: this.gender == 'Nam' ? 0 : 1,
+                    birthdate: this.birthdate,
+                    phone: this.phone,
+                    username: this.username,
+                    password: this.password
+                }).then(res => {
+                    try {
+                        if (res.status == 200) {
+                            this.usersignin = res.data
+                            alert('Dang ky thanh cong')
+                            location.reload()
+
+                        }
+                    } catch (error) {
+                        alert('Ten tai khoan bi trung')
+                    }
+                })
+            } else {
+                alert('Nhap lai password khong dung')
+            }
+        },
+    },
     components: { Header, Footer }
 }
 </script>

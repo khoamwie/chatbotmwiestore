@@ -5,17 +5,17 @@
             <Sidebar></Sidebar>
         </div>
         <div class="col-right">
-            <DataTable :value="customers" :paginator="true" class="p-datatable-customers" :rows="10" dataKey="id"
-                :rowHover="true" v-model:selection="selectedCustomers" v-model:filters="filters" filterDisplay="menu"
+            <DataTable :value="users" :paginator="true" class="p-datatable-customers" :rows="5" dataKey="id"
+                sortField="id" sortOrder="-1" :rowHover="true" v-model:filters="filters" filterDisplay="menu"
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                :rowsPerPageOptions="[10, 25, 50]"
+                :rowsPerPageOptions="[5, 10, 15]"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                responsiveLayout="scroll">
+                :globalFilterFields="['global', 'name','gender']" responsiveLayout="scroll">
                 <template #header>
-                    <div class="fw-bold fs-5 mt-2 mb-2 "><i class="bi bi-bookmarks"></i> Quản lý người dùng</div>
+                    <div class="fw-bold fs-5 mt-2 mb-2 "><i class="bi bi-person"></i> Quản lý người dùng</div>
                     <div class="header-table">
                         <div>
-                            <Button class="p-button-rounded p-button-success" icon="pi pi-plus" />
+                            <!-- <Button class="p-button-rounded p-button-success" icon="pi pi-plus" /> -->
                         </div>
                         <div>
                             <span class="p-input-icon-left">
@@ -27,36 +27,68 @@
                     </div>
                 </template>
                 <template #empty>
-                    Không tìm thấy người dùng.
+                    Không tìm thấy nhà cung cấp.
                 </template>
                 <Column field="id" header="ID" sortable>
                     <template #body="{ data }">
-                        {{ data.name }}
+                        {{ data.id }}
                     </template>
                 </Column>
-                <Column field="name" header="Họ và tên" sortable>
+                <Column field="name" header="Tên người dùng" sortable>
                     <template #body="{ data }">
                         {{ data.name }}
                     </template>
                 </Column>
-                <Column field="name" header="Giới tính" sortable>
+                <Column field="gender" filterField="gender" header="Giới tính" sortable :showFilterMatchModes="false">
                     <template #body="{ data }">
-                        {{ data.name }}
+                        {{ getGender(data.gender) }}
+                    </template>
+                    <template #filter="{ filterModel }">
+                        <div class="mb-3 font-bold">Chọn giới tính</div>
+                        <MultiSelect v-model="filterModel.value" :options="gender" optionValue="code" optionLabel="name"
+                            placeholder="Any" class="p-column-filter">
+                            <template #option="slotProps">
+                                <div class="p-multiselect-representative-option">
+                                    <span class="image-text">{{ slotProps.option.name }}</span>
+                                </div>
+                            </template>
+                        </MultiSelect>
                     </template>
                 </Column>
-                <Column field="name" header="Ngày sinh" sortable>
+                <Column field="birthdate" header="Ngày sinh" sortable>
                     <template #body="{ data }">
-                        {{ data.name }}
+                        {{ formatDate(data.birthdate) }}
                     </template>
                 </Column>
-                <Column field="name" header="Số điện thoại" sortable>
+                <Column field="phone" header="Số điện thoại" sortable>
                     <template #body="{ data }">
-                        {{ data.name }}
+                        {{ data.phone }}
                     </template>
                 </Column>
-                <Column field="" header="" style="min-width: 14rem;">
-                    <Button class="p-button-rounded p-button-warning" icon="pi pi-pencil" />
-                    <Button class="p-button-rounded p-button-danger" icon="pi pi-trash" />
+                <Column field="lock" filterField="lock" header="Trạng thái" sortable :showFilterMatchModes="false">
+                    <template #body="{ data }">
+                        {{ getLock(data.lock) }}
+                    </template>
+                    <template #filter="{ filterModel }">
+                        <div class="mb-3 font-bold">Chọn giới tính</div>
+                        <MultiSelect v-model="filterModel.value" :options="lock" optionValue="code" optionLabel="name"
+                            placeholder="Any" class="p-column-filter">
+                            <template #option="slotProps">
+                                <div class="p-multiselect-representative-option">
+                                    <span class="image-text">{{ slotProps.option.name }}</span>
+                                </div>
+                            </template>
+                        </MultiSelect>
+                    </template>
+                </Column>
+                <Column field="" header="">
+                    <template #body="{ data }">
+                        <Button class="p-button-rounded p-button-danger" icon="pi pi-lock" @click="lockUser"/>
+                        &nbsp;
+                        <Button class="p-button-rounded p-button-success" icon="pi pi-comment" />
+                        &nbsp;
+                        <Button class="p-button-rounded p-button-success" icon="pi pi-star" />
+                    </template>
                 </Column>
             </DataTable>
         </div>
@@ -64,17 +96,63 @@
 </template>
 
 <script>
-import {HTTP} from '../../../http-common.js'
-import { FilterMatchMode } from 'primevue/api'
+import { HTTP } from '../../../http-common.js'
+import { FilterMatchMode, FilterOperator } from 'primevue/api'
 import Header from '../../../components/admin/Header.vue'
 import Sidebar from '../../../components/admin/Sidebar.vue'
 export default {
     data() {
         return {
-            data: null,
+            users: null,
             filters: {
-                'global': { value: null, matchMode: FilterMatchMode.CONTAINS }
-            }
+                'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+                'gender': { value: null, matchMode: FilterMatchMode.IN },
+                'lock': { value: null, matchMode: FilterMatchMode.IN },
+            },
+            gender: [
+                { name: 'Nam', code: 0 },
+                { name: 'Nữ', code: 1 }
+            ],
+            lock: [
+                { name: 'Chưa khóa', code: 0 },
+                { name: 'Đã khóa', code: 1 }
+            ],
+        }
+    },
+    mounted() {
+        this.getAll()
+    },
+    methods: {
+        getAll() {
+            HTTP.get('User/getAll').then(res => {
+                if (res.data) {
+                    this.users = res.data;
+                }
+            })
+        },
+        formatDate(value) {
+            var date = new Date(value)
+            date.formatDate
+            return date.toLocaleDateString('en-US', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+            });
+        },
+        getGender(value) {
+            if (value == 0)
+                return "Nam"
+            if (value == 1)
+                return "Nữ"
+        },
+        getLock(value) {
+            if (value == 0)
+                return "Chưa khóa"
+            if (value == 1)
+                return "Đã khóa"
+        },
+        lockUser(value){
+            HTTP.put('User/lockUser/' + value).then(res => {})
         }
     },
     components: { Header, Sidebar }

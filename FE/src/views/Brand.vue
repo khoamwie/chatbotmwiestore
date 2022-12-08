@@ -2,6 +2,9 @@
 	<Header></Header>
 	<div class="container mt-4 mb-4">
 		<div class="">
+			<div class="mb-4 fst-italic">
+				Trang chủ / nhà cung cấp
+			</div>
 			<DataView :value="brands" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder"
 				:sortField="sortField">
 				<template #header>
@@ -30,8 +33,10 @@
 							</div>
 							<div class="product-list-action">
 								<!-- <span class="product-price">${{ slotProps.data.price }}</span> -->
-								<Button class="p-button-rounded p-button-warning" icon="pi pi-angle-right" 
-									:disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
+								<!-- <router-link style="text-decoration: none;" :to="'/brand/' + slotProps.data.url"><Button
+										class="p-button-rounded p-button-warning" icon="pi pi-angle-right"
+										:disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
+								</router-link> -->
 								<!-- <span :class="'product-badge status-' + slotProps.data.inventoryStatus.toLowerCase()">{{
 										slotProps.data.inventoryStatus
 								}}</span> -->
@@ -61,8 +66,10 @@
 							</div>
 							<div class="product-grid-item-bottom">
 								<!-- <span class="product-price">${{ slotProps.data.price }}</span> -->
-								<Button class="p-button-rounded p-button-warning" icon="pi pi-angle-right"
-									:disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
+								<!-- <router-link style="text-decoration: none;" :to="'/brand/' + slotProps.data.url"><Button
+										class="p-button-rounded p-button-warning" icon="pi pi-angle-right"
+										:disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
+								</router-link> -->
 							</div>
 						</div>
 					</div>
@@ -77,7 +84,7 @@
 import Header from '../components/Layouts/Header.vue'
 import Footer from '../components/Layouts/Footer.vue'
 import { HTTP } from '../http-common.js'
-
+import { RouterLink } from 'vue-router'
 export default {
 	data() {
 		return {
@@ -102,7 +109,7 @@ export default {
 					this.brands = res.data
 				}
 			})
-		}
+		},
 	},
 	components: { Header, Footer }
 }

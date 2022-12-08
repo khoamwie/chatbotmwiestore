@@ -15,7 +15,7 @@
                     <div class="fw-bold fs-5 mt-2 mb-2 "><i class="bi bi-bookmarks"></i> Quản lý danh mục</div>
                     <div class="header-table">
                         <div>
-                            <Button class="p-button-rounded p-button-success" icon="pi pi-plus" />
+                            <Button class="p-button-rounded p-button-success" icon="pi pi-plus" @click="showAdd"/>
                         </div>
                         <div>
                             <span class="p-input-icon-left">
@@ -47,6 +47,20 @@
                     </template>
                 </Column>
             </DataTable>
+
+            <Dialog v-model:visible="cateDialog" :style="{width: '450px'}" header="Product Details" :modal="true" class="p-fluid">
+            <div class="field">
+                <label for="name">Name</label>
+                <InputText id="name" v-model="name" required="true" autofocus :class="{'p-invalid': submitted && !product.name}" />
+                <small class="p-error" v-if="submitted && !product.name">Name is required.</small>
+            </div>
+
+            <template #footer>
+                <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog"/>
+                <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
+            </template>
+        </Dialog>
+
         </div>
     </div>
 </template>
@@ -60,6 +74,7 @@ export default {
     data() {
         return {
             data: null,
+            cateDialog: false,
             filters: {
                 'global': { value: null, matchMode: FilterMatchMode.CONTAINS }
             }
@@ -75,6 +90,11 @@ export default {
                     this.data = res.data;
                 }
             })
+        },
+        showAdd(){
+            this.cate = {}
+            this.cateDialog = true
+            this.submitted = false
         }
     },
     components: { Header, Sidebar }
